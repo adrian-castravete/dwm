@@ -9,24 +9,16 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "DejaVu Sans Mono:size=10" };
-static const char dmenufont[]       = "DejaVu Sans Mono:size=10";
-/* DB8
- * white	#DCF5FF
- * yellow	#E6C86E
- * green	#64B964
- * blue		#508CD7
- * red		#D77355
- * grey		#646964
- * purple	#55415F
- * black	#000000
- */
-static const char col_nbg[]         = "#508cd7";
-static const char col_nfg[]         = "#dcf5ff";
-static const char col_nb[]          = "#508cd7";
-static const char col_sbg[]         = "#dcf5ff";
-static const char col_sfg[]         = "#55415f";
-static const char col_sb[]          = "#dcf5ff";
+static const char *fonts[]          = { 
+	"DejaVu Sans:size=12:antialias=true:hinting=true:hintstyle=hintfull"
+};
+static const char dmenufont[]       = "DejaVu Sans:size=12:antialias=true:hinting=true:hintstyle=hintfull";
+static const char col_nbg[]         = "#000055";
+static const char col_nfg[]         = "#55aaff";
+static const char col_nb[]          = "#000055";
+static const char col_sbg[]         = "#000055";
+static const char col_sfg[]         = "#ffffff";
+static const char col_sb[]          = "#00ff00";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_nfg,   col_nbg,   col_nb },
@@ -34,7 +26,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
