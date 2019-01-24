@@ -10,9 +10,9 @@ static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { 
-	"DejaVu Sans:size=12:antialias=true:hinting=true:hintstyle=hintfull"
+	"PxPlus IBM CGA\\-2y:size=12:antialias=true:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       = "DejaVu Sans:size=12:antialias=true:hinting=true:hintstyle=hintfull";
+static const char dmenufont[]       = "PxPlus IBM CGA\\-2y:size=12:antialias=true:hinting=true:hintstyle=hintfull";
 static const char col_nbg[]         = "#000055";
 static const char col_nfg[]         = "#55aaff";
 static const char col_nb[]          = "#000055";
@@ -37,7 +37,8 @@ static const unsigned int alphas[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "1 ", "2 ", "3", "4", "5", "6", "7", "8 ", "9 " };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+/*static const char *tags[] = { "1 ", "2 ", "3", "4", "5", "6", "7", "8 ", "9 " };*/
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -77,7 +78,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "exo-open", "--launch", "TerminalEmulator", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
