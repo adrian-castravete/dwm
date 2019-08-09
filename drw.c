@@ -5,6 +5,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 
+#define FC_COLOR "color"
+
 #include "drw.h"
 #include "util.h"
 

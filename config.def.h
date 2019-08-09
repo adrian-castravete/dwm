@@ -10,9 +10,9 @@ static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { 
-	"PxPlus IBM CGA\\-2y:size=12:antialias=true:hinting=true:hintstyle=hintfull"
+	"PxPlus IBM EGA8:size=12:antialias=true:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       = "PxPlus IBM CGA\\-2y:size=12:antialias=true:hinting=true:hintstyle=hintfull";
+static const char dmenufont[]       = "PxPlus IBM EGA8:size=12:antialias=true:hinting=true:hintstyle=hintfull";
 static const char col_nbg[]         = "#000055";
 static const char col_nfg[]         = "#55aaff";
 static const char col_nb[]          = "#000055";
