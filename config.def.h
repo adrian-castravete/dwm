@@ -19,21 +19,10 @@ static const char col_nb[]          = "#000055";
 static const char col_sbg[]         = "#000055";
 static const char col_sfg[]         = "#ffffff";
 static const char col_sb[]          = "#00ff00";
-#define baralpha 0xdd
-#define borderalpha OPAQUE
-/*
-static const unsigned int baralpha = 0xdd;
-static const unsigned int borderalpha = OPAQUE;
-*/
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_nfg,   col_nbg,   col_nb },
 	[SchemeSel]  = { col_sfg,   col_sbg,   col_sb },
-};
-static const unsigned int alphas[][3] = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { OPAQUE,    baralpha,  borderalpha },
-	[SchemeSel]  = { OPAQUE,    baralpha,  borderalpha },
 };
 
 /* tagging */
