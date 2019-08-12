@@ -12,7 +12,7 @@ static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { 
 	"PxPlus IBM EGA8:size=12:antialias=true:hinting=true:hintstyle=hintfull"
 };
-static const char dmenufont[]       = "PxPlus IBM EGA8:size=12:antialias=true:hinting=true:hintstyle=hintfull";
+static const char dmenufont[]       = "PxPlus IBM EGA8:size=48:antialias=true:hinting=true:hintstyle=hintfull";
 static const char col_nbg[]         = "#000055";
 static const char col_nfg[]         = "#55aaff";
 static const char col_nb[]          = "#000055";
@@ -66,7 +66,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-p", "Run:", "-l", "6", "-b", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
 static const char *termcmd[]  = { "exo-open", "--launch", "TerminalEmulator", NULL };
 
 static Key keys[] = {
