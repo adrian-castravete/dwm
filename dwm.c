@@ -110,7 +110,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
 	unsigned int tags;
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, ismaximized;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -200,13 +200,14 @@ static unsigned int getsystraywidth();
 static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, int focused);
 static void grabkeys(void);
-static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
-static void monocle(Monitor *m);
+static void maximize(const Arg *arg);
+static void maxleft(const Arg *arg);
+static void maxright(const Arg *arg);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
@@ -228,8 +229,6 @@ static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
-static void setlayout(const Arg *arg);
-static void setmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
@@ -238,7 +237,6 @@ static void spawn(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
-static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -828,7 +826,7 @@ drawbar(Monitor *m)
 	}
 	w = blw = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+	//x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - sw - stw - x) > bh) {
 		if (m->sel) {
@@ -1085,13 +1083,6 @@ grabkeys(void)
 	}
 }
 
-void
-incnmaster(const Arg *arg)
-{
-	selmon->nmaster = MAX(selmon->nmaster + arg->i, 0);
-	arrange(selmon);
-}
-
 #ifdef XINERAMA
 static int
 isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info)
@@ -1229,18 +1220,45 @@ maprequest(XEvent *e)
 }
 
 void
-monocle(Monitor *m)
+maximize(const Arg *arg)
 {
-	unsigned int n = 0;
-	Client *c;
+	Monitor *m = selmon;
+	if (!m)
+		return;
+	Client *c = m->sel;
+	if (c) {
+		if (c->ismaximized) {
+			c->ismaximized = 0;
+			resize(c, c->oldx, c->oldy, c->oldw, c->oldh, 0);
+		} else {
+			c->ismaximized = 1;
+			resize(c, m->wx + gappx, m->wy + gappx, m->ww - 2 * (c->bw + gappx), m->wh - 2 * (c->bw + gappx), 0);
+		}
+	}
+}
 
-	for (c = m->clients; c; c = c->next)
-		if (ISVISIBLE(c))
-			n++;
-	if (n > 0) /* override layout symbol */
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
-	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
+void
+maxleft(const Arg *arg)
+{
+	Monitor *m = selmon;
+	if (!m)
+		return;
+	Client *c = m->sel;
+
+	if (c)
+		resize(c, m->wx + gappx, m->wy/2 + gappx, m->ww/2 - 2 * (c->bw + gappx), m->wh - 2 * (c->bw + gappx), 1);
+}
+
+void
+maxright(const Arg *arg)
+{
+	Monitor *m = selmon;
+	if (!m)
+		return;
+	Client *c = m->sel;
+
+	if (c)
+		resize(c, m->ww/2 + m->wx + gappx, m->wy/2 + gappx, m->ww/2 - 2 * (c->bw + gappx), m->wh - 2 * (c->bw + gappx), 1);
 }
 
 void
@@ -1681,35 +1699,6 @@ setfullscreen(Client *c, int fullscreen)
 }
 
 void
-setlayout(const Arg *arg)
-{
-	if (!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
-		selmon->sellt ^= 1;
-	if (arg && arg->v)
-		selmon->lt[selmon->sellt] = (Layout *)arg->v;
-	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
-	if (selmon->sel)
-		arrange(selmon);
-	else
-		drawbar(selmon);
-}
-
-/* arg > 1.0 will set mfact absolutely */
-void
-setmfact(const Arg *arg)
-{
-	float f;
-
-	if (!arg || !selmon->lt[selmon->sellt]->arrange)
-		return;
-	f = arg->f < 1.0 ? arg->f + selmon->mfact : arg->f - 1.0;
-	if (f < 0.1 || f > 0.9)
-		return;
-	selmon->mfact = f;
-	arrange(selmon);
-}
-
-void
 setup(void)
 {
 	int i;
@@ -1863,29 +1852,8 @@ tagmon(const Arg *arg)
 }
 
 void
-tile(Monitor *m)
+tagstack(const Arg *arg)
 {
-	unsigned int i, n, h, mw, my, ty;
-	Client *c;
-
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if (n == 0)
-		return;
-
-	if (n > m->nmaster)
-		mw = m->nmaster ? m->ww * m->mfact : 0;
-	else
-		mw = m->ww;
-	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
-		if (i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			my += HEIGHT(c);
-		} else {
-			h = (m->wh - ty) / (n - i);
-			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-			ty += HEIGHT(c);
-		}
 }
 
 void
