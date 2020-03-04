@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int gappx     = 8;        /* gap between left-right windows and screen borders */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
@@ -14,12 +14,12 @@ static const char *fonts[]          = {
 	"DejaVu Sans:size=10:weight=bold:antialias=true:hinting=false:hintstyle=hintnone"
 };
 static const char dmenufont[]       = "DejaVu Sans:size=10:weight=bold:antialias=true:hinting=false:hintstyle=hintnone";
-static const char col_nbg[]         = "#000055";
-static const char col_nfg[]         = "#55aaff";
-static const char col_nb[]          = "#000055";
-static const char col_sbg[]         = "#000055";
-static const char col_sfg[]         = "#ffffff";
-static const char col_sb[]          = "#55aaff";
+static const char col_nbg[]         = "#333333";
+static const char col_nfg[]         = "#aaaaaa";
+static const char col_nb[]          = "#555555";
+static const char col_sbg[]         = "#508cd7";
+static const char col_sfg[]         = "#dcf5ff";
+static const char col_sb[]          = "#508cd7";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_nfg,   col_nbg,   col_nb },
