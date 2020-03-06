@@ -794,9 +794,21 @@ drawbar(Monitor *m)
 	drw_setscheme(drw, scheme[SchemeNorm]);
 
 	if ((w = m->ww - sw - stw - x) > bh) {
-		if (m->sel) {
-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+		int l = 0;
+		for (c = m->clients; c; c = c->next) if (m->tagset[m->seltags] & c->tags) l += 1;
+		if (l) {
+			int wl = w / l;
+			for (i = 0, c = m->clients; c; c = c->next) {
+				if (m->tagset[m->seltags] & c->tags) {
+					if (c == m->sel) {
+						drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
+					} else {
+						drw_setscheme(drw, scheme[SchemeNorm]);
+					}
+					drw_text(drw, x + i * wl, 0, wl, bh, lrpad / 2, c->name, 0);
+					i += 1;
+				}
+			}
 		} else {
 			drw_setscheme(drw, scheme[SchemeNorm]);
 			drw_rect(drw, x, 0, w, bh, 1, 1);
