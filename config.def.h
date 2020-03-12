@@ -56,8 +56,8 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run_history", "-p", "Run:", "-l", "10", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
 static const char *dmenufmcmd[] = { "dmenufm", "-p", NULL };
 static const char *termcmd[]  = { "lxterminal", NULL };
-static const char *lockcmd[]  = { "bin/lock", NULL };
-static const char *byebyecmd[]  = { "bin/byebye", NULL };
+static const char *lockcmd[]  = { "lock", NULL };
+static const char *byebyecmd[]  = { "byebye", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
