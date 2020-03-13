@@ -54,7 +54,7 @@ static const Rule rules[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run_history", "-p", "Run:", "-l", "10", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
-static const char *filemgrcmd[] = { "pcmanfm", "-p", NULL };
+static const char *filemgrcmd[] = { "pcmanfm", NULL };
 static const char *termcmd[]  = { "x-terminal-emulator", NULL };
 
 static Key keys[] = {
