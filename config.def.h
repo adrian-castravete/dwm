@@ -55,9 +55,7 @@ static const Rule rules[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run_history", "-p", "Run:", "-l", "10", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nbg, "-nf", col_nfg, "-sb", col_sbg, "-sf", col_sfg, NULL };
 static const char *dmenufmcmd[] = { "dmenufm", "-p", NULL };
-static const char *termcmd[]  = { "lxterminal", NULL };
-static const char *lockcmd[]  = { "lock", NULL };
-static const char *byebyecmd[]  = { "byebye", NULL };
+static const char *termcmd[]  = { "x-terminal-emulator", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -96,8 +94,6 @@ static Key keys[] = {
 	{ 0,                            XK_F8,     spawn,          {.v = termcmd } },
 	{ 0,                            XK_F10,    spawn,          {.v = dmenufmcmd } },
 	{ 0,                            XK_F12,    spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_Delete, spawn,          {.v = lockcmd } },
-	{ ControlMask|Mod1Mask,         XK_Delete, spawn,          {.v = byebyecmd } },
 };
 
 /* button definitions */
