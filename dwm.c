@@ -110,7 +110,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
 	unsigned int tags;
-	int isfixed, isurgent, neverfocus, oldstate, isfullscreen, ismaximized;
+	int isurgent, neverfocus, oldstate, isfullscreen, ismaximized;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -212,6 +212,7 @@ static void resizerequest(XEvent *e);
 static void restack(Monitor *m);
 static void run(void);
 static void scan(void);
+static void selwintitle(const Arg *arg);
 static int sendevent(Window w, Atom proto, int m, long d0, long d1, long d2, long d3, long d4);
 static void sendmon(Client *c, Monitor *m, int reposition);
 static void setclientstate(Client *c, long state);
@@ -226,7 +227,7 @@ static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void togglebar(const Arg *arg);
-static void togglefloating(const Arg *arg);
+static void togglefull(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -806,6 +807,9 @@ drawbar(Monitor *m)
 						drw_setscheme(drw, scheme[SchemeNorm]);
 					}
 					drw_text(drw, x + i * wl, 0, wl, bh, lrpad / 2, c->name, 0);
+					if (c->ismaximized) {
+						drw_rect(drw, x + i * wl + boxs, boxs, boxw, boxw, 0, 0);
+					}
 					i += 1;
 				}
 			}
@@ -1201,11 +1205,14 @@ maximize(const Arg *arg)
 	if (c) {
 		if (c->ismaximized) {
 			c->ismaximized = 0;
+			c->isfullscreen = 0;
 			resize(c, c->oldx, c->oldy, c->oldw, c->oldh, 0);
 		} else {
 			c->ismaximized = 1;
+			c->isfullscreen = 0;
 			resize(c, m->wx + gappx, m->wy + gappx, m->ww - 2 * (c->bw + gappx), m->wh - 2 * (c->bw + gappx), 0);
 		}
+		drawbar(m);
 	}
 }
 
@@ -1217,8 +1224,12 @@ maxleft(const Arg *arg)
 		return;
 	Client *c = m->sel;
 
-	if (c)
+	if (c) {
+		c->ismaximized = 0;
+		c->isfullscreen = 0;
 		resize(c, m->wx + gappx, m->wy + gappx, m->ww/2 - 2 * c->bw - 1.5 * gappx, m->wh - 2 * (c->bw + gappx), 0);
+		drawbar(m);
+	}
 }
 
 void
@@ -1229,8 +1240,12 @@ maxright(const Arg *arg)
 		return;
 	Client *c = m->sel;
 
-	if (c)
+	if (c) {
+		c->ismaximized = 0;
+		c->isfullscreen = 0;
 		resize(c, m->wx + m->ww/2 + 0.5 * gappx, m->wy + gappx, m->ww/2 - 2 * c->bw - 1.5 * gappx, m->wh - 2 * (c->bw + gappx), 0);
+		drawbar(m);
+	}
 }
 
 void
@@ -1261,7 +1276,7 @@ movemouse(const Arg *arg)
 
 	if (!(c = selmon->sel))
 		return;
-	if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
+	if (c->isfullscreen || c->ismaximized) /* no support moving fullscreen windows by mouse */
 		return;
 	restack(selmon);
 	ocx = c->x;
@@ -1438,7 +1453,7 @@ resizemouse(const Arg *arg)
 
 	if (!(c = selmon->sel))
 		return;
-	if (c->isfullscreen) /* no support resizing fullscreen windows by mouse */
+	if (c->isfullscreen || c->ismaximized) /* no support resizing fullscreen windows by mouse */
 		return;
 	restack(selmon);
 	ocx = c->x;
@@ -1628,6 +1643,7 @@ setfullscreen(Client *c, int fullscreen)
 		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
 			PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
 		c->isfullscreen = 1;
+		c->ismaximized = 0;
 		c->oldbw = c->bw;
 		c->bw = 0;
 		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
@@ -1636,6 +1652,7 @@ setfullscreen(Client *c, int fullscreen)
 		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
 			PropModeReplace, (unsigned char*)0, 0);
 		c->isfullscreen = 0;
+		c->ismaximized = 0;
 		c->bw = c->oldbw;
 		c->x = c->oldx;
 		c->y = c->oldy;
@@ -1820,15 +1837,15 @@ togglebar(const Arg *arg)
 }
 
 void
-togglefloating(const Arg *arg)
+togglefull(const Arg *arg)
 {
-	if (!selmon->sel)
+	Monitor *m = selmon;
+	if (!m)
 		return;
-	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
-		return;
-	resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-		selmon->sel->w, selmon->sel->h, 0);
-	arrange(selmon);
+	Client *c = m->sel;
+	if (c) {
+		setfullscreen(c, !c->isfullscreen);
+	}
 }
 
 void
@@ -2105,7 +2122,6 @@ updatesizehints(Client *c)
 		c->maxa = (float)size.max_aspect.x / size.max_aspect.y;
 	} else
 		c->maxa = c->mina = 0.0;
-	c->isfixed = (c->maxw && c->maxh && c->maxw == c->minw && c->maxh == c->minh);
 }
 
 void

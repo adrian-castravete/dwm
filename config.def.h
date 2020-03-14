@@ -60,6 +60,7 @@ static const char *termcmd[]  = { "x-terminal-emulator", NULL };
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ 0,                            XK_F1,     maximize,       {0} },
+	{ ShiftMask,                    XK_F1,     togglefull,     {0} },
 	{ 0,                            XK_F2,     maxleft,        {0} },
 	{ 0,                            XK_F3,     maxright,       {0} },
 	{ 0,                            XK_F4,     focusstack,     {.i = +1 } },
@@ -77,7 +78,6 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_h,      tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_l,      tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
