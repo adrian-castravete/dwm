@@ -1149,6 +1149,8 @@ manage(Window w, XWindowAttributes *wa)
 	updatesizehints(c);
 	updatewmhints(c);
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+  c->x = c->oldx = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+  c->y = c->oldy = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
 	grabbuttons(c, 0);
 	XRaiseWindow(dpy, c->win);
 	attach(c);
@@ -1373,8 +1375,9 @@ propertynotify(XEvent *e)
 			if (c == c->mon->sel)
 				drawbar(c->mon);
 		}
-		if (ev->atom == netatom[NetWMWindowType])
+		if (ev->atom == netatom[NetWMWindowType]) {
 			updatewindowtype(c);
+    }
 	}
 }
 
