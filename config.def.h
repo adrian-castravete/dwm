@@ -59,18 +59,17 @@ static const char *termcmd[]  = { "x-terminal-emulator", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ 0,                            XK_F1,     maximize,       {0} },
-	{ ShiftMask,                    XK_F1,     togglefull,     {0} },
-	{ 0,                            XK_F2,     maxleft,        {0} },
-	{ 0,                            XK_F3,     maxright,       {0} },
-	{ 0,                            XK_F4,     focusstack,     {.i = +1 } },
-	{ ShiftMask,                    XK_F4,     focusstack,     {.i = -1 } },
-	{ ControlMask,                  XK_F4,     zoom,           {0} },
-	{ 0,                            XK_F6,     killclient,     {0} },
-	{ 0,                            XK_F7,     focusmon,       {.i = +1 } },
-	{ ControlMask,                  XK_F7,     focusmon,       {.i = -1 } },
-	{ ShiftMask,                    XK_F7,     tagmon,         {.i = +1 } },
-	{ ControlMask|ShiftMask,        XK_F7,     tagmon,         {.i = -1 } },
+	{ MODKEY,                       XK_F4,     killclient,     {0} },
+	{ MODKEY,                       XK_F8,     focusmon,       {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_F8,     focusmon,       {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_F8,     tagmon,         {.i = +1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_F8,     tagmon,         {.i = -1 } },
+	{ MODKEY,                       XK_F9,     maxleft,        {0} },
+	{ MODKEY,                       XK_F10,    maximize,       {0} },
+	{ MODKEY|ShiftMask,             XK_F10,    togglefull,     {0} },
+	{ MODKEY,                       XK_F11,    maxright,       {0} },
+	{ MODKEY,                       XK_Tab,    focusstack,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Tab,    focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      focusmon,       {.i = -1 } },
@@ -80,7 +79,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -91,9 +89,11 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ 0,                            XK_F8,     spawn,          {.v = termcmd } },
-	{ 0,                            XK_F10,    spawn,          {.v = filemgrcmd } },
-	{ 0,                            XK_F12,    spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_e,      spawn,          {.v = filemgrcmd } },
+	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
+	/*{ MODKEY|ControlMask,           XK_Tab,    zoom,           {0} },*/
+	/*{ MODKEY,                       XK_Return, zoom,           {0} },*/
 };
 
 /* button definitions */
