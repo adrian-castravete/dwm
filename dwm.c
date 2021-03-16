@@ -198,8 +198,8 @@ static void maxleft(const Arg *arg);
 static void maxright(const Arg *arg);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
-/*static Client *nexttiled(Client *c);
-static void pop(Client *);*/
+static Client *nexttiled(Client *c);
+static void pop(Client *);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
@@ -252,7 +252,7 @@ static Client *wintosystrayicon(Window w);
 static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
-/*static void zoom(const Arg *arg);*/
+static void zoom(const Arg *arg);
 
 /* variables */
 static Systray *systray =  NULL;
@@ -1322,7 +1322,7 @@ movemouse(const Arg *arg)
 	}
 }
 
-/*Client *
+Client *
 nexttiled(Client *c)
 {
 	for (; c && !ISVISIBLE(c); c = c->next);
@@ -1336,7 +1336,7 @@ pop(Client *c)
 	attach(c);
 	focus(c);
 	arrange(c->mon);
-}*/
+}
 
 void
 propertynotify(XEvent *e)
@@ -2389,7 +2389,7 @@ systraytomon(Monitor *m) {
 	return t;
 }
 
-/*void
+void
 zoom(const Arg *arg)
 {
 	Client *c = selmon->sel;
@@ -2400,7 +2400,7 @@ zoom(const Arg *arg)
 		if (!c || !(c = nexttiled(c->next)))
 			return;
 	pop(c);
-}*/
+}
 
 int
 main(int argc, char *argv[])
